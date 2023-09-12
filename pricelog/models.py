@@ -7,7 +7,7 @@ class EstateLog(models.Model):
     year = models.IntegerField() # 년
     month = models.IntegerField() # 월
     day = models.IntegerField() # 일
-    area = models.IntegerField() # 면적
+    area = models.FloatField() # 면적
     
     
 class LuxuryLog(models.Model):
@@ -18,12 +18,12 @@ class LuxuryLog(models.Model):
     
 class MusicLog(models.Model):
     music_id = models.IntegerField()
-    ymd = models.CharField(max_length=30) # 년월일
+    ymd = models.CharField(max_length=30)
     price_high = models.IntegerField()
     price_low = models.IntegerField()
     price_close = models.IntegerField()
-    pct_price_change = models.IntegerField()
-    cnt_units_traded = models.IntegerField() 
+    pct_price_change = models.FloatField()
+    cnt_units_traded = models.IntegerField()
     
 
     
