@@ -5,6 +5,9 @@
 2. 해당 폴더 위치에서 cmd 혹은 git bash 열기
 3. `pip install -r requirements.txt`
 
+## 2. Data migration
+`python manage.py migrate`
+`python process.py`
 
-## 2. Server 가동 방법
+## 3. Server 가동 방법
 `python manage.py runserver`

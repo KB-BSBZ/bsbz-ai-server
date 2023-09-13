@@ -19,6 +19,6 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('<product_id>/', views.show_all_log, name='show_all_log'),
+    path('<product_id>/<product_type>', views.show_all_log, name='show_all_log'),
     path('predict/<product_id>/', views.show_predict, name='show_predict'),
 ]
