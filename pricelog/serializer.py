@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import LuxuryLog, EstateLog
+from .models import LuxuryLog, EstateLog, MusicLog
 
 class EstateLogSerializer(serializers.ModelSerializer):
 
@@ -7,11 +7,11 @@ class EstateLogSerializer(serializers.ModelSerializer):
         model = EstateLog
         exclude = ('id', 'product_id')
 
-class PriceLogPredictSerializer(serializers.ModelSerializer):
+class MusicLogSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = 'PriceLog'
-        field = '__all__'
+        model = MusicLog
+        exclude = ('id' , 'music_id')
 
 class LuxuryLogSerializer(serializers.ModelSerializer):
 

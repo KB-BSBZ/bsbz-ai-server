@@ -20,5 +20,7 @@ from . import views
 urlpatterns = [
     path('log/<product_id>/<product_type>', views.show_all_log, name='show_all_log'),
     path('estate_predict/<product_id>/', views.show_estate_predict, name='show_estate_predict'),
+    path('luxury_predict/<product_id>/', views.show_luxury_predict, name='show_luxury_predict'),
+    path('music_predict/<product_id>/', views.show_music_predict, name='show_music_predict'),
     path('news/', views.show_news, name="show_news"),
 ]

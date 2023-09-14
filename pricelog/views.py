@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_list_or_404, render, get_object_or_404
 from rest_framework.response import Response
 from .models import EstateLog, LuxuryLog, MusicLog
-from .serializer import LuxuryLogSerializer, EstateLogSerializer
-from .logic.predict import estate_predict
+from .serializer import LuxuryLogSerializer, EstateLogSerializer, MusicLogSerializer
+from .logic.predict import estate_predict, music_predict, luxury_predict
 import urllib
 import json
 import random
@@ -24,14 +24,25 @@ def show_all_log(request, product_id, product_type):
         return Response(serializer.data)
     
     if product_type=='3':
-        pass
+        products = MusicLog.objects.filter(music_id = product_id)
+        serializer = MusicLogSerializer(products, many = True)
+        return Response(serializer.data)
         
     return Response({'message' : 'error'})
 
 @api_view(['GET',])
 def show_estate_predict(request, product_id):
-    print("왔다네 왔다네 여기까지 왔다네")
     data = estate_predict(product_id)
+    return Response(data)
+
+@api_view(['GET',])
+def show_luxury_predict(request, product_id):
+    data = luxury_predict(product_id)
+    return Response(data)
+
+@api_view(['GET',])
+def show_music_predict(request, product_id):
+    data = music_predict(product_id)
     return Response(data)
 
 
@@ -56,17 +67,12 @@ def show_news(request):
         response = urllib.request.urlopen(request)
         response_body = response.read()
         data = json.loads(response_body.decode('utf-8-sig'))
-        print(q)
-        print(data["items"])
         for d in data["items"]:
-            print(d)
             result.append(d)
     
     sampleNum = random.sample(sampleList, 5)
     result_sampled = []
     for s in sampleNum:
         result_sampled.append(result[s])
-        
-    
-    
+
     return Response(result_sampled)

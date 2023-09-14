@@ -43,9 +43,6 @@ def estate_predict(product_id):
     test = df4['price'][int(0.8*len(df4)):]
     
     model2 = pm.auto_arima(train, d=1, seasonal=False, trace=True)       
-    print(df4)
-    
-    pred = model2.predict(n_periods=len(test)).to_list()
     
     def forcast_one_step():
         fc, conf = model2.predict(n_periods=1, return_conf_int=True)
@@ -65,11 +62,7 @@ def estate_predict(product_id):
         pred_lower.append(conf[0])
         # 모델 업데이트
         model2.update(fc)
-        
-    print(y_pred)
-    print(pred_lower)
-    print(pred_upper)
-    
+
     forecast_index = pd.date_range(start=test.index[-1], periods=forecast_period + 1, freq='M')
     ymd = []
     for i in forecast_index.tolist():
@@ -77,8 +70,6 @@ def estate_predict(product_id):
  
 
     # 최종 12개월 예측 결과 출력
-    # print(forecast_df)
-    # print(data)
     data = []
     for i in range(12):
         temp = {}
@@ -87,7 +78,13 @@ def estate_predict(product_id):
         temp["upper"] = pred_upper[i]
         temp["lower"] = pred_lower[i]
         data.append(temp)
-        
-    print(data)
     
     return data
+
+
+def luxury_predict(product_id):
+    pass
+    
+
+def music_predict(product_id):
+    pass
