@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import LuxuryLog
+from .models import LuxuryLog, EstateLog
 
-class PriceLogSerializer(serializers.ModelSerializer):
+class EstateLogSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = 'PriceLog'
-        field = '__all__'
+        model = EstateLog
+        exclude = ('id', 'product_id')
 
 class PriceLogPredictSerializer(serializers.ModelSerializer):
     
