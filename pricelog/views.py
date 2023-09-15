@@ -2,9 +2,13 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 # from serializer import TradeLogSerializer
 from django.shortcuts import get_list_or_404, render, get_object_or_404
+from django.db.models.functions import Concat
+from django.db.models import F, Value, CharField
+
+
 from rest_framework.response import Response
 from .models import EstateLog, LuxuryLog, MusicLog
-from .serializer import LuxuryLogSerializer, EstateLogSerializer, MusicLogSerializer
+from .serializer import LuxuryLogSerializer, EstateLogSerializer, MusicLogSerializer, LogSerializer
 from .logic.predict import estate_predict, music_predict, luxury_predict
 import urllib
 import json
@@ -14,18 +18,21 @@ import random
 @api_view(['GET',])
 def show_all_log(request, product_id, product_type):
     if product_type=='1':
-        products = EstateLog.objects.filter(product_id = product_id)
-        serializer = EstateLogSerializer(products, many = True)
+        products = EstateLog.objects.filter(product_id = product_id).annotate(ymd = Concat('year', Value('-'), 'month', Value('-'), 'day', output_field=CharField(max_length=20))).values()
+        
+        serializer = LogSerializer(products, many = True)
         return Response(serializer.data)
     
     if product_type=='2':
         products = LuxuryLog.objects.filter(luxury_id = product_id)
-        serializer = LuxuryLogSerializer(products, many = True)
+        serializer = LogSerializer(products, many = True)
         return Response(serializer.data)
     
     if product_type=='3':
-        products = MusicLog.objects.filter(music_id = product_id)
-        serializer = MusicLogSerializer(products, many = True)
+        products = MusicLog.objects.filter(music_id = product_id).annotate(price = F('price_close')).values()
+        print(products)
+        serializer = LogSerializer(products, many = True)
+        
         return Response(serializer.data)
         
     return Response({'message' : 'error'})
