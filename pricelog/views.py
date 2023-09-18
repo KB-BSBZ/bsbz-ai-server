@@ -77,5 +77,15 @@ def show_news(request):
     result_sampled = []
     for s in sampleNum:
         result_sampled.append(result[s])
+        
+    result = []
+    
+    for rs in result_sampled:
+        rs["title"] = rs["title"].replace('<b>', '')
+        rs["title"] = rs["title"].replace('</b>', '')
+        rs['title'] = rs['title'].replace('&quot;', '')
+        rs["description"] = rs["description"].replace('<b>', '')
+        rs["description"] = rs["description"].replace('</b>', '')
+        rs['description'] = rs['description'].replace('&quot;', '')
 
     return Response(result_sampled)
