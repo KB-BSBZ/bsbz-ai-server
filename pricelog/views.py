@@ -80,12 +80,15 @@ def show_news(request):
         
     result = []
     
+    cnt = 0
     for rs in result_sampled:
+        rs["id"] = cnt
         rs["title"] = rs["title"].replace('<b>', '')
         rs["title"] = rs["title"].replace('</b>', '')
         rs['title'] = rs['title'].replace('&quot;', '')
         rs["description"] = rs["description"].replace('<b>', '')
         rs["description"] = rs["description"].replace('</b>', '')
         rs['description'] = rs['description'].replace('&quot;', '')
+        cnt += 1
 
     return Response(result_sampled)
