@@ -18,7 +18,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('log/<product_id>/<product_type>', views.show_all_log, name='show_all_log'),
+    path('estate_log/<product_id>/', views.show_estate_log, name='show_estate_log'),
+    path('luxury_log/<product_id>/', views.show_luxury_log, name='show_luxury_log'),
+    path('music_log/<product_id>/', views.show_music_log, name='show_music_log'),
     path('estate_predict/<product_id>/', views.show_estate_predict, name='show_estate_predict'),
     path('luxury_predict/<product_id>/', views.show_luxury_predict, name='show_luxury_predict'),
     path('music_predict/<product_id>/', views.show_music_predict, name='show_music_predict'),

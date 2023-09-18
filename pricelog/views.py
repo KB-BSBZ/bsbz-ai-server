@@ -16,26 +16,22 @@ import random
 
 # Create your views here.
 @api_view(['GET',])
-def show_all_log(request, product_id, product_type):
-    if product_type=='1':
-        products = EstateLog.objects.filter(product_id = product_id).annotate(ymd = Concat('year', Value('-'), 'month', Value('-'), 'day', output_field=CharField(max_length=20))).values()
-        
-        serializer = LogSerializer(products, many = True)
-        return Response(serializer.data)
-    
-    if product_type=='2':
-        products = LuxuryLog.objects.filter(luxury_id = product_id)
-        serializer = LogSerializer(products, many = True)
-        return Response(serializer.data)
-    
-    if product_type=='3':
-        products = MusicLog.objects.filter(music_id = product_id).annotate(price = F('price_close')).values()
-        print(products)
-        serializer = LogSerializer(products, many = True)
-        
-        return Response(serializer.data)
-        
-    return Response({'message' : 'error'})
+def show_estate_log(request, product_id):
+    products = EstateLog.objects.filter(product_id = product_id).annotate(ymd = Concat('year', Value('-'), 'month', Value('-'), 'day', output_field=CharField(max_length=20))).values()
+    serializer = LogSerializer(products, many = True)
+    return Response(serializer.data)
+
+@api_view(['GET',])
+def show_luxury_log(request, product_id):
+    products = LuxuryLog.objects.filter(luxury_id = product_id)
+    serializer = LogSerializer(products, many = True)
+    return Response(serializer.data)
+
+@api_view(['GET',])
+def show_music_log(request, product_id):
+    products = MusicLog.objects.filter(music_id = product_id).annotate(price = F('price_close')).values()
+    serializer = LogSerializer(products, many = True)
+    return Response(serializer.data)
 
 @api_view(['GET',])
 def show_estate_predict(request, product_id):

@@ -87,4 +87,4 @@ def luxury_predict(product_id):
     
 
 def music_predict(product_id):
-    pass
+    return product_id
