@@ -42,11 +42,11 @@ def estate_predict(product_id):
     train = df4['price'][:int(0.8*len(df4))]
     test = df4['price'][int(0.8*len(df4)):]
     
-    model2 = pm.auto_arima(train, d=1, seasonal=False, trace=True)       
-    
     def forcast_one_step():
         fc, conf = model2.predict(n_periods=1, return_conf_int=True)
         return fc.tolist()[0], np.asarray(conf).tolist()[0]
+    
+    model2 = pm.auto_arima(train, d=1, seasonal=False, trace=True)       
     
     # 값들을 담을 빈 리스트를 생성
     y_pred = []
@@ -60,6 +60,7 @@ def estate_predict(product_id):
         y_pred.append(fc)
         pred_upper.append(conf[1])
         pred_lower.append(conf[0])
+        
         # 모델 업데이트
         model2.update(fc)
 
@@ -84,7 +85,19 @@ def estate_predict(product_id):
 
 def luxury_predict(product_id):
     pass
+
     
 
 def music_predict(product_id):
+    
     return product_id
+
+def estate_cloud():
+    df = pd.read_sql(f"SELECT contents, pubdate FROM pricelog_estate_text", conn)
+
+def luxury_cloud():
+    df = pd.read_sql(f"SELECT contents, pubdate FROM pricelog_luxury_text", conn)
+    print(df)
+    
+
+    

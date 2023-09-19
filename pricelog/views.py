@@ -9,7 +9,7 @@ from django.db.models import F, Value, CharField
 from rest_framework.response import Response
 from .models import EstateLog, LuxuryLog, MusicLog
 from .serializer import LuxuryLogSerializer, EstateLogSerializer, MusicLogSerializer, LogSerializer
-from .logic.predict import estate_predict, music_predict, luxury_predict
+from .logic.predict import estate_predict, music_predict, luxury_predict, luxury_cloud
 import urllib
 import json
 import random
@@ -100,5 +100,7 @@ def show_music_cloud_word(request, product_id):
 def show_estate_cloud_word(request):
     pass
 
+@api_view(['GET',])
 def show_luxury_cloud_word(request):
-    pass
+    luxury_cloud()
+    return Response()

@@ -14,8 +14,6 @@ class MusicLogSerializer(serializers.ModelSerializer):
         exclude = ('id' , 'music_id')
         
         
-
-
 class LuxuryLogSerializer(serializers.ModelSerializer): 
     
     class Meta:
