@@ -92,3 +92,13 @@ def show_news(request):
         cnt += 1
 
     return Response(result_sampled)
+
+
+def show_music_cloud_word(request, product_id):
+    pass
+
+def show_estate_cloud_word(request):
+    pass
+
+def show_luxury_cloud_word(request):
+    pass
