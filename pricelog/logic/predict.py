@@ -1,16 +1,17 @@
 import numpy as np
 import pandas as pd
 import sqlite3
-from ..models import EstateLog
 from statsmodels.tsa.arima.model import ARIMA
 import pmdarima as pm
 from datetime import datetime
+from statsmodels.tsa.stattools import adfuller
 
 np.random.seed(42)
 
 database = "db.sqlite3"
 conn = sqlite3.connect(database, check_same_thread=False)
 
+# id: 2
 def estate_predict(product_id):
     df1 = pd.read_sql(f"SELECT * FROM pricelog_estatelog WHERE product_id = {product_id}", conn)
 
@@ -42,12 +43,12 @@ def estate_predict(product_id):
     train = df4['price'][:int(0.8*len(df4))]
     test = df4['price'][int(0.8*len(df4)):]
     
-    def forcast_one_step():
-        fc, conf = model2.predict(n_periods=1, return_conf_int=True)
-        return fc.tolist()[0], np.asarray(conf).tolist()[0]
     
     model2 = pm.auto_arima(train, d=1, seasonal=False, trace=True)       
     
+    def forcast_one_step():
+        fc, conf = model2.predict(n_periods=1, return_conf_int=True)
+        return fc.tolist()[0], np.asarray(conf).tolist()[0]
     # 값들을 담을 빈 리스트를 생성
     y_pred = []
     pred_upper = []
@@ -79,12 +80,101 @@ def estate_predict(product_id):
         temp["upper"] = pred_upper[i]
         temp["lower"] = pred_lower[i]
         data.append(temp)
-    
+    conn.close()
     return data
 
-
+# 
 def luxury_predict(product_id):
-    pass
+    df = pd.read_sql(f"SELECT * FROM pricelog_luxurylog WHERE luxury_id = {product_id}", conn)
+    
+    #'Date' 열을 datetime형으로 변환하기
+    df2 = df.copy()
+    df2['date'] = pd.to_datetime(df.ymd, format='%Y-%m-%d')
+
+    df2 = df2[['date', 'price']]
+
+    #날짜를 인덱스로 변환하기
+    #인덱스 설정 후 drop
+    df3 = df2.copy()
+    df3.index = df3.date
+    df3 = df3.drop(columns="date")
+    
+    adfuller(df3, autolag='AIC')
+    
+    
+    # index를 period로 변환해주어야 warning 뜨지 않음
+    df3_copy = df3.copy()
+    df3_copy.index = pd.DatetimeIndex(df3_copy.index).to_period('D')
+
+    # 예측을 시작할 위치(이후 차분을 적용하기 때문에 맞추어주었음
+    start_idx = df3_copy.index[1]
+
+    # ARIMA(1,0,1)
+    model1 = ARIMA(df3_copy, order=(1,0,1))
+    # fit model
+    model1_fit = model1.fit()
+
+    # 전체에 대한 예측 실시
+    forecast1 = model1_fit.predict(start=start_idx)
+    
+
+
+    #train data: 80%, test data: 20%
+    train = df3['price'][:int(0.8*len(df3))] #80%
+    test = df3['price'][int(0.8*len(df3)):] #나머지 20%
+    test.shape
+    
+    #최적화된 ARIMA 모델 분석
+    #최적화 파라미터로 ARIMA 하기
+    #모델 파라미터 최적화 (p=1, d=1, q=3)
+    model2 = ARIMA(df3_copy, order=(0,1,0))
+    # fit
+    model2_fit = model2.fit()
+    model2 = pm.auto_arima(train, d=1, seasonal=False, trace=True)
+    
+    # ARIMA 모델 생성과 학습
+    model = ARIMA(df3, order=(1, 1, 0))
+    model_fit = model.fit()
+    
+    def forcast_one_step():
+        fc, conf = model2.predict(n_periods=1, return_conf_int=True)
+        return fc.tolist()[0], np.asarray(conf).tolist()[0]
+
+    # 값들을 담을 빈 리스트를 생성
+    y_pred = []
+    pred_upper = []
+    pred_lower = []
+
+    # for문으로 예측 및 모델 업데이트 반복
+
+    for new_ob in test:
+        fc, conf = forcast_one_step()
+        # print("fc : " , fc)
+        # print("conf : ", conf)
+        y_pred.append(fc)
+        pred_upper.append(conf[1])
+        pred_lower.append(conf[0])
+        
+        print(fc)
+        model2.update(new_ob)
+    
+    #예측 결과를 데이터프레임으로 만들기
+    test_pred2 = pd.DataFrame({'test':test, 'pred':y_pred})
+    y_pred_df = test_pred2['pred']	# Series로 반환
+    
+    # # 최종 12개월 예측 결과 출력
+    # data = []
+    # for i in range(12):
+    #     temp = {}
+    #     temp['date'] = ymd[i]
+    #     temp["predict"] = y_pred[i]
+    #     temp["upper"] = pred_upper[i]
+    #     temp["lower"] = pred_lower[i]
+    #     data.append(temp)
+    # print(y_pred_df)
+    
+    conn.close()
+    return {}
 
     
 
@@ -94,10 +184,13 @@ def music_predict(product_id):
 
 def estate_cloud():
     df = pd.read_sql(f"SELECT contents, pubdate FROM pricelog_estate_text", conn)
+    print(df)
+
 
 def luxury_cloud():
     df = pd.read_sql(f"SELECT contents, pubdate FROM pricelog_luxury_text", conn)
     print(df)
-    
+
+
 
     
