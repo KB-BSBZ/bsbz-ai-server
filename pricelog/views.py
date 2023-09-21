@@ -24,6 +24,9 @@ def show_estate_log(request, product_id):
 @api_view(['GET',])
 def show_luxury_log(request, product_id):
     products = LuxuryLog.objects.filter(luxury_id = product_id)
+    for i in range(len(products)):
+        products[i].price /= 10000
+    
     serializer = LogSerializer(products, many = True)
     return Response(serializer.data)
 
