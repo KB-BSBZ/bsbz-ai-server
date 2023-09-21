@@ -79,3 +79,17 @@ dtype={
 }
 df.to_sql(name='pricelog_luxury_text', con=conn, if_exists='replace', dtype=dtype, index=False)
 conn.close()
+
+
+# comment total
+df = pd.read_csv(f"./analysis/csv/total_comment.csv")
+
+# Connect to (create) database.
+database = "db.sqlite3"
+conn = sqlite3.connect(database)
+dtype={
+    "music_id" : "Integer",
+    "comment": "TextField",
+}
+df.to_sql(name='pricelog_musiccommentlog', con=conn, if_exists='replace', dtype=dtype, index=True, index_label="id")
+conn.close()

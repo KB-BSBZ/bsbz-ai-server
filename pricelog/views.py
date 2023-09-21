@@ -98,8 +98,8 @@ def show_news(request):
 
 @api_view(['GET',])
 def show_music_cloud_word(request, product_id):
-    
-    return Response("")
+    data  = music_predict
+    return Response(data)
 
 @api_view(['GET',])
 def show_estate_cloud_word(request):

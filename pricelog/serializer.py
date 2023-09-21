@@ -25,4 +25,6 @@ class LogSerializer(serializers.Serializer):
     ymd  = serializers.CharField(max_length = 20)
     price = serializers.IntegerField()
     
+
+    
         
