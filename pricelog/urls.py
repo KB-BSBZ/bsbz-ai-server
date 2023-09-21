@@ -25,7 +25,6 @@ urlpatterns = [
     path('luxury_predict/<product_id>/', views.show_luxury_predict, name='show_luxury_predict'),
     path('music_predict/<product_id>/', views.show_music_predict, name='show_music_predict'),
     path('news/', views.show_news, name="show_news"),
-    path('music_cloud_word/<int:product_id>/', views.show_music_cloud_word, name="show_music_cloud_word"),
     path('estate_cloud_word/', views.show_estate_cloud_word, name="show_estate_cloud_word"),
     path('luxury_cloud_word/', views.show_luxury_cloud_word, name="show_luxury_cloud_word"),
 ]
