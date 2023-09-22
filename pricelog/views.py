@@ -14,10 +14,43 @@ import urllib
 import json
 import random
 
+import pandas as pd
+import sqlite3
+
+
+def get_best_area(id):
+    database = "db.sqlite3"
+    conn = sqlite3.connect(database, check_same_thread=False)
+    
+    # 가장 거래수가 많은 평수를 찾는 로직
+    df1 = pd.read_sql(f"SELECT * FROM pricelog_estatelog WHERE product_id = {id}", conn)
+    df1['month'] = df1['month'].apply(lambda x : str(x).zfill(2))
+    df1['day'] = df1['day'].apply(lambda x : str(x).zfill(2))
+
+    cols = ['year', 'month', 'day']
+    df1['date'] =df1[cols].apply(lambda row: '-'.join(row.values.astype(str)), axis=1)
+    
+    area = df1['area'].value_counts().keys()[0]
+    if (area > 70 and area < 90):
+        area = int(area)
+    else: 
+        area = 84
+    
+    area_list = []
+    for i in df1['area'].value_counts().keys():
+        temp = int(i)
+        if temp == area:
+            area_list.append(i)
+            
+    return area_list
+
+
 # Create your views here.
 @api_view(['GET',])
 def show_estate_log(request, product_id):
-    products = EstateLog.objects.filter(product_id = product_id, area = 76.79).annotate(ymd = Concat('year', Value('-'), 'month', Value('-'), 'day', output_field=CharField(max_length=20))).values()
+    area_list = get_best_area(product_id)
+    products = EstateLog.objects.filter(product_id = product_id, area__in = area_list).annotate(ymd = Concat('year', Value('-'), 'month', Value('-'), 'day', output_field=CharField(max_length=20))).values()
+    print(len(products))
     serializer = LogSerializer(products, many = True)
     return Response(serializer.data)
 
@@ -100,7 +133,7 @@ def show_news(request):
 @api_view(['GET',])
 def show_estate_cloud_word(request):
     df = estate_cloud()
-    return Response("")
+    return Response(df)
 
 @api_view(['GET',])
 def show_luxury_cloud_word(request):
