@@ -64,7 +64,7 @@ dtype={
     "contents": "TextField",
     "pubdate" : "CharField",
 }
-df.to_sql(name='pricelog_estate_text', con=conn, if_exists='replace', dtype=dtype, index=False)
+df.to_sql(name='pricelog_estatetext', con=conn, if_exists='replace', dtype=dtype, index=False)
 conn.close()
 
 # Estate Text total
@@ -77,7 +77,7 @@ dtype={
     "contents": "TextField",
     "pubdate" : "CharField",
 }
-df.to_sql(name='pricelog_luxury_text', con=conn, if_exists='replace', dtype=dtype, index=False)
+df.to_sql(name='pricelog_luxurytext', con=conn, if_exists='replace', dtype=dtype, index=False)
 conn.close()
 
 

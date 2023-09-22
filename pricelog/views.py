@@ -84,6 +84,15 @@ def show_music_predict(request, product_id):
     data = music_predict(product_id)
     return Response(data)
 
+@api_view(['GET',])
+def show_estate_cloud_word(request):
+    data = estate_cloud()
+    return Response(data)
+
+@api_view(['GET',])
+def show_luxury_cloud_word(request):
+    df = luxury_cloud()
+    return Response(df)
 
 @api_view(['GET',])
 def show_news(request):
@@ -129,13 +138,3 @@ def show_news(request):
 
     return Response(result_sampled)
 
-
-@api_view(['GET',])
-def show_estate_cloud_word(request):
-    df = estate_cloud()
-    return Response(df)
-
-@api_view(['GET',])
-def show_luxury_cloud_word(request):
-    df = luxury_cloud()
-    return Response("")
