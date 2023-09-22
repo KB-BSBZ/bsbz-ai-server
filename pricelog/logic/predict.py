@@ -1,11 +1,10 @@
-from .ai_asset import music_stop_words_list, music_delete_words_list
+from .ai_asset import *
 
 import numpy as np
 import pandas as pd
 import sqlite3
 from statsmodels.tsa.arima.model import ARIMA
 import pmdarima as pm
-from datetime import datetime
 from statsmodels.tsa.stattools import adfuller
 
 
@@ -123,9 +122,6 @@ def luxury_predict(product_id):
     df3_copy = df3.copy()
     df3_copy.index = pd.DatetimeIndex(df3_copy.index).to_period('D')
 
-    # 예측을 시작할 위치(이후 차분을 적용하기 때문에 맞추어주었음
-    start_idx = df3_copy.index[1]
-
     #train data: 80%, test data: 20%
     train = df3['price'][:int(0.8*len(df3))] #80%
     test = df3['price'][int(0.8*len(df3)):] #나머지 20%
@@ -184,8 +180,6 @@ def luxury_predict(product_id):
 def music_predict(product_id):
     # 가사가 포함되어 있는 댓글 삭제
     music1_df = pd.read_sql(f"SELECT * FROM pricelog_musiccommentlog WHERE music_id = {product_id}", conn)
-    print("music1_df")
-    print(music1_df)
     delete_keyword = music_delete_words_list()[int(product_id) - 21]
     music1_df = music1_df[music1_df['comment'].fillna('').apply(lambda x: not any(keyword in x for keyword in delete_keyword))]
 
@@ -223,8 +217,6 @@ def music_predict(product_id):
 
     # 리스트를 데이터 프레임으로 변환
     df_common_words = pd.DataFrame(common_words, columns=['word', 'frequency'])
-    print("df_common_words")
-    print(df_common_words)
 
     answer = df_common_words.to_dict(orient='records')
     
@@ -234,12 +226,10 @@ def music_predict(product_id):
 
 def estate_cloud():
     df = pd.read_sql(f"SELECT contents, pubdate FROM pricelog_estate_text", conn)
-    print(df)
 
 
 def luxury_cloud():
     df = pd.read_sql(f"SELECT contents, pubdate FROM pricelog_luxury_text", conn)
-    print(df)
 
 
 

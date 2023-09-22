@@ -17,7 +17,7 @@ import random
 # Create your views here.
 @api_view(['GET',])
 def show_estate_log(request, product_id):
-    products = EstateLog.objects.filter(product_id = product_id).annotate(ymd = Concat('year', Value('-'), 'month', Value('-'), 'day', output_field=CharField(max_length=20))).values()
+    products = EstateLog.objects.filter(product_id = product_id, area = 76.79).annotate(ymd = Concat('year', Value('-'), 'month', Value('-'), 'day', output_field=CharField(max_length=20))).values()
     serializer = LogSerializer(products, many = True)
     return Response(serializer.data)
 

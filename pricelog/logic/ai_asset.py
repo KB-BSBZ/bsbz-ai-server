@@ -1,5 +1,4 @@
 
-
 def music_stop_words_list():
     return ['바보', '명수', '이석훈', '지아', '박명수', '곡', '사람', '가수', '노래', '이승기', '승기', '응급실', '이', '\n', '가', '에', '진짜', '도', '을', '잘', '너무',
                 '를', '님', '는', '의', '내', '은', '들', '때', '한', '야', '번', '보', '부를', '그때',
@@ -78,6 +77,11 @@ def music_delete_words_list():
 def estate_stop_words_list():
     pass
 
+def estate_delete_words_list():
+    pass
 
 def luxury_stop_words_list():
+    pass
+
+def luxury_delete_words_list():
     pass
